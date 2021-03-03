@@ -1,6 +1,7 @@
 # PyCharm
 .idea/
 src/__pycache__
+__pycache__/
 
 # MACOS
 .DS_STORE

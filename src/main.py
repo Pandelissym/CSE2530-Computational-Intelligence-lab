@@ -3,6 +3,7 @@ Main module.
 """
 from src.data_loader import load_data, split_train_test
 from src.network import Network
+from src.perceptron import Perceptron
 import matplotlib.pyplot as plt
 
 
@@ -11,7 +12,7 @@ def main():
     Main method to run.
     """
     # data = [[0, 0], [0, 1], [1, 0], [1, 1]]
-    # labels = [0, 0, 0, 1]
+    # labels = [0, 1, 1, 1]
     # perceptron = Perceptron(data, labels)
     # perceptron.train()
     # perceptron.plot_decision_boundary()
