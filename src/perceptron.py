@@ -36,7 +36,7 @@ class Perceptron:
         self.bias = np.random.random()
         self.weights = np.append(np.random.random(len(data[0])), self.bias)
 
-    def train(self, plot_learning_graph=False):
+    def train(self, plot_learning_graph=False, save_file=False):
         """
         Method to train perceptron by learning weights and bias using the
         perceptron algorithm
@@ -67,7 +67,7 @@ class Perceptron:
             print(f"Could not converge in {self.max_epochs} epochs.")
 
         if plot_learning_graph:
-            self._plot_learning_graph(costs, epoch)
+            self._plot_learning_graph(costs, epoch, save_file)
 
     def get_prediction(self, point):
         """
@@ -131,9 +131,16 @@ class Perceptron:
         :return: None
         """
         assert len(self.data[0]) - 1 == 2
+        font = {'family': 'normal',
+                'weight': 'normal',
+                'size': 18}
+        plt.rc('font', **font)
+        plt.rc('lines', markersize=6)
+        plt.rc('xtick', labelsize=15)
+        plt.rc('ytick', labelsize=15)
+        plt.rc("figure", figsize=(6, 6))
 
         ax = plt.subplot()  # type: axes.Axes
-
         colors = ['tab:blue', 'tab:orange']
 
         x_values = self.data[:, 0]
@@ -177,9 +184,9 @@ class Perceptron:
         ax.scatter(x_values, y_values, c=[colors[i] for i in self.labels])
         ax.xaxis.set_major_locator(MaxNLocator(integer=True))
 
-        ax.set_title("Decision boundary for OR", y=1.05)
+        ax.set_title("Decision boundary for XOR", y=1.05)
         if save_file:
-            plt.savefig("../doc/plots/OR_decision_boundary")
+            plt.savefig("../doc/plots/XOR_decision_boundary")
         plt.show()
 
     def _plot_learning_graph(self, costs: [float], epochs: int, save_file=False):
@@ -190,13 +197,23 @@ class Perceptron:
         :param epochs: The total amount of epochs the model run for
         :return: None
         """
+        font = {'family': 'normal',
+                'weight': 'normal',
+                'size': 18}
+        plt.rc('font', **font)
+        plt.rc('lines', markersize=6)
+        plt.rc('xtick', labelsize=15)
+        plt.rc('ytick', labelsize=15)
+        plt.rc("figure", figsize=(6, 6))
+
         x = list(range(epochs))
         ax = plt.subplot()  # type:axes.Axes
-        ax.set_ylabel("Error (MSE)")
-        ax.set_xlabel("Epoch")
+        ax.set_ylabel("Error (MSE)", labelpad=8)
+        ax.set_xlabel("Epoch", labelpad=5)
         ax.xaxis.set_major_locator(MaxNLocator(integer=True))
         ax.plot(x, costs)
-        ax.set_title("Error (MSE) over epochs for OR", y=1.05)
+        ax.set_title("Error (MSE) over epochs for XOR", y=1.05)
+        plt.tight_layout()
         if save_file:
-            plt.savefig("../doc/plots/OR_error_over_epochs")
+            plt.savefig("../doc/plots/XOR_error_over_epochs")
         plt.show()
