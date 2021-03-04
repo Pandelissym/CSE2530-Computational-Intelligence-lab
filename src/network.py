@@ -206,6 +206,6 @@ class Network:
 
         labels = np.asarray(labels).reshape(7, 7)
         plt.figure(figsize=(10, 7))
-        sn.heatmap(df_cm, annot=labels, cmap='Blues', fmt='')
+        sn.heatmap(df_cm, annot=labels, cmap='Blues', fmt='').set(xlabel='Predicted Values', ylabel='Actual Values')
 
         return confusion_matrix
