@@ -18,7 +18,7 @@ def load_data():
         targets = [vectorize_target(int(line.rstrip('\n')), 7) for line in file]
 
     with open("../data/unknown.txt") as file:
-        unknown = [np.array(list(map(float, line.strip('/n').split(','))))
+        unknown = [np.array(list(map(float, line.strip('/n').split(',')))).reshape((10,1))
                    for line in file]
     return np.array(features), np.array(targets), np.array(unknown)
 
