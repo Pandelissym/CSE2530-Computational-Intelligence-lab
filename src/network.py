@@ -184,7 +184,6 @@ class Network:
 
         return correct / total
 
-
     def confusion_matrix(self, validation_data):
         """
         Creates Confusion Matrix based on the validation data and returns
