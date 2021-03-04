@@ -12,7 +12,7 @@ def main():
     Main method to run.
     """
     # data = [[0, 0], [0, 1], [1, 0], [1, 1]]
-    # labels = [0, 1, 1, 1]
+    # labels = [0, 0, 0, 1]
     # perceptron = Perceptron(data, labels)
     # perceptron.train()
     # perceptron.plot_decision_boundary()
@@ -26,10 +26,12 @@ def main():
     network.train(training_data, 30, 20, 0.07, validation_data)
 
     accuracy = network.evaluate(test_data)
+    confusion_matrix = network.confusion_matrix(test_data)
     print(f"accuracy= {accuracy}")
-
     plt.suptitle("Sigmoid with softmax and log likelihood. Accuracy = "
                  + str(accuracy))
+    plt.suptitle("Confusion Matrix")
+    print(f"Confusion Matrix= {confusion_matrix}")
     plt.legend()
     plt.show()
 

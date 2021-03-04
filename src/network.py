@@ -3,6 +3,8 @@ Module implementing a multi layer perceptron
 """
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sn
+import pandas as pd
 from src.activations import sigmoid, sigmoid_derivative, softmax, \
     tanh_derivative, tanh, leaky_relu_derivative, leaky_relu
 from src.cost_functions import LogLikelihood
@@ -181,3 +183,30 @@ class Network:
                 correct += 1
 
         return correct / total
+
+
+    def confusion_matrix(self, validation_data):
+        """
+        Creates Confusion Matrix based on the validation data and returns
+        it.
+
+        :param validation_data: data to validate model on
+        :return: The confusion matrix of the model.
+        """
+        confusion_matrix = np.zeros((7, 7))
+        for x, y in validation_data:
+            output = self.feedforward(x)
+            confusion_matrix[np.argmax(output), np.argmax(y)] += 1
+
+        df_cm = pd.DataFrame(confusion_matrix, index=["Class " + i for i in "1234567"],
+                             columns=["Class " + i for i in "1234567"])
+
+        group_c = ["{0: 0.0f}".format(value) for value in confusion_matrix.flatten()]
+        group_p = ["{0: .2%}".format(value) for value in confusion_matrix.flatten() / np.sum(confusion_matrix)]
+        labels = [f"{v1}\n{v2}" for v1, v2 in zip(group_c, group_p)]
+
+        labels = np.asarray(labels).reshape(7, 7)
+        plt.figure(figsize=(10, 7))
+        sn.heatmap(df_cm, annot=labels, cmap='Blues', fmt='')
+
+        return confusion_matrix
