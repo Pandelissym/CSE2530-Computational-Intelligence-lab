@@ -13,10 +13,10 @@ def main():
     Main method to run.
     """
     # data = [[0, 0], [0, 1], [1, 0], [1, 1]]
-    # labels = [0, 0, 0, 1]
+    # labels = [0, 1, 1, 0]
     # perceptron = Perceptron(data, labels)
-    # perceptron.train()
-    # perceptron.plot_decision_boundary()
+    # perceptron.train(plot_learning_graph=True, save_file=False)
+    # perceptron.plot_decision_boundary(save_file=False)
 
     features, targets, unknown = load_data()
     data = list(zip(features, targets))
