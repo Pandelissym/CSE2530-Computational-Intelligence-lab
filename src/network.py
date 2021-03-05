@@ -221,11 +221,17 @@ class Network:
                              columns=["Class " + i for i in "1234567"])
 
         group_c = ["{0: 0.0f}".format(value) for value in confusion_matrix.flatten()]
-        group_p = ["{0: .2%}".format(value) for value in confusion_matrix.flatten() / np.sum(confusion_matrix)]
+
+        normalized = confusion_matrix
+        for i in range(len(confusion_matrix.T)):
+            normalized[i] = confusion_matrix[i] / np.sum(confusion_matrix[i])
+
+
+        group_p = ["{0: .2%}".format(value) for value in normalized.flatten()]
         labels = [f"{v1}\n{v2}" for v1, v2 in zip(group_c, group_p)]
 
         labels = np.asarray(labels).reshape(7, 7)
-        plt.figure(figsize=(10, 7))
+        plt.figure(figsize=(12, 8))
         sn.heatmap(df_cm, annot=labels, cmap='Blues', fmt='').set(xlabel='Predicted Values', ylabel='Actual Values')
 
         return confusion_matrix
