@@ -51,3 +51,6 @@ def split_train_test(data, test_size, random=False):
     index = int(len(data) * test_size)
     return data[index:], data[:index]
 
+
+def true_targets():
+    return np.genfromtxt('../data/targets.txt', delimiter=',', dtype=int)
