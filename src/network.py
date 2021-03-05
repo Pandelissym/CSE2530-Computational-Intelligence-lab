@@ -5,6 +5,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sn
 import pandas as pd
+from matplotlib.ticker import MaxNLocator
+
 from src.activations import sigmoid, sigmoid_derivative, softmax, \
     tanh_derivative, tanh, leaky_relu_derivative, leaky_relu
 from src.cost_functions import LogLikelihood
@@ -27,10 +29,11 @@ class Network:
         :param sizes: A list containing the amount of neurons in each layer.
         """
         self.num_layers = len(sizes)
-        self.biases = np.array([np.random.randn(x, 1) for x in sizes[1:]],
-                               dtype=object)
-        self.weights = np.array([np.random.randn(x, y) for (x, y)
-                                 in zip(sizes[1:], sizes[:-1])], dtype=object)
+        self.biases = [np.random.randn(x, 1) for x in sizes[1:]]
+
+        self.weights = [np.random.randn(x, y) for (x, y)
+                        in zip(sizes[1:], sizes[:-1])]
+
         self.cost_function = LogLikelihood
 
     def feedforward(self, x):
@@ -87,9 +90,28 @@ class Network:
             print(f"Epoch {i} completed.")
 
         if validation_data is not None:
+            font = {'family': 'normal',
+                    'weight': 'normal',
+                    'size': 17}
+            plt.rc('font', **font)
+            plt.rc('lines', markersize=6)
+            plt.rc('xtick', labelsize=15)
+            plt.rc('ytick', labelsize=15)
+            plt.rc("figure", figsize=(6, 6))
+
             x = list(range(epochs))
             plt.plot(x, train_errors, label=f'training')
             plt.plot(x, validation_errors, label=f'validation')
+            ax = plt.gca()
+            ax.set_ylabel("Error (MSE)", labelpad=8)
+            ax.set_xlabel("Epoch", labelpad=5)
+            ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+            ax.set_title("Error (MSE) over epochs", y=1.05)
+            plt.legend()
+            plt.show()
+
+            plt.tight_layout()
+            plt.savefig("../doc/plots/validation_vs_training")
 
     def update_with_mini_batch(self, mini_batch, learning_rate):
         """
@@ -100,20 +122,19 @@ class Network:
         :param learning_rate: gradient descent learning rate
         :return: None
         """
-        bias_gradients = np.array([np.zeros(bias.shape)
-                                   for bias in self.biases],  dtype=object)
-        weight_gradients = np.array([np.zeros(weight.shape)
-                                     for weight in self.weights],
-                                    dtype=object)
+        bias_gradients = [np.zeros(bias.shape)
+                          for bias in self.biases]
+        weight_gradients = [np.zeros(weight.shape)
+                            for weight in self.weights]
 
         for x, y in mini_batch:
             point_bias_gradient, point_weight_gradient =\
                 self.backpropagation(x, y)
-            bias_gradients += point_bias_gradient
-            weight_gradients += point_weight_gradient
+            bias_gradients = [bg + pbg for bg, pbg in zip(bias_gradients, point_bias_gradient)]
+            weight_gradients = [wg + pwg for wg, pwg in zip(weight_gradients, point_weight_gradient)]
 
-        self.biases -= (learning_rate / len(mini_batch)) * bias_gradients
-        self.weights -= (learning_rate / len(mini_batch)) * weight_gradients
+        self.biases = [b - (learning_rate / len(mini_batch)) * bg for b, bg in zip(self.biases, bias_gradients)]
+        self.weights = [w - (learning_rate / len(mini_batch)) * wg for w, wg in zip(self.weights, weight_gradients)]
 
     def backpropagation(self, x, y):
         """
@@ -162,8 +183,7 @@ class Network:
             bias_gradients[i] = delta
             weight_gradients[i] = np.dot(delta, alphas[i].T)
 
-        return np.array(bias_gradients,  dtype=object), \
-            np.array(weight_gradients,  dtype=object)
+        return bias_gradients, weight_gradients
 
     def evaluate(self, validation_data):
         """

@@ -1,6 +1,8 @@
 """
 Main module.
 """
+from matplotlib.ticker import MaxNLocator
+
 from src.data_loader import load_data, split_train_test
 from src.network import Network
 import numpy as np
@@ -23,30 +25,30 @@ def main():
     training_data, test_data = split_train_test(data, 0.15)
     training_data, validation_data = split_train_test(training_data, 0.15)
 
-    network = Network([10, 30, 7])
-    network.train(training_data, 30, 20, 0.07, validation_data)
+    network = Network([10, 20, 7])
+    network.train(training_data, 35, 20, 0.07, validation_data)
 
-    # Plots
+    # # Plots
     accuracy = network.evaluate(test_data)
-    confusion_matrix = network.confusion_matrix(test_data)
+    # confusion_matrix = network.confusion_matrix(test_data)
     print(f"accuracy= {accuracy}")
-    plt.suptitle("Sigmoid with softmax and log likelihood. Accuracy = "
-                 + str(accuracy))
-    plt.suptitle("Confusion Matrix")
-    # print(f"Confusion Matrix= {confusion_matrix}")
-    plt.legend()
-    plt.show()
-
-    # Write predictions of unknown data to Text File
-    f = open("../doc/Group_66_classes.txt", "w")
-    for x in unknown[:-1]:
-        print(x)
-        prediction = np.argmax(network.feedforward(x)) + 1
-        f.write(f"{prediction},")
-
-    prediction = np.argmax(network.feedforward(unknown[-1])) + 1
-    f.write(f"{prediction}")
-    f.close()
+    # plt.suptitle("Sigmoid with softmax and log likelihood. Accuracy = "
+    #              + str(accuracy))
+    # plt.suptitle("Confusion Matrix")
+    # # print(f"Confusion Matrix= {confusion_matrix}")
+    # plt.legend()
+    # plt.show()
+    #
+    # # Write predictions of unknown data to Text File
+    # f = open("../doc/Group_66_classes.txt", "w")
+    # for x in unknown[:-1]:
+    #     print(x)
+    #     prediction = np.argmax(network.feedforward(x)) + 1
+    #     f.write(f"{prediction},")
+    #
+    # prediction = np.argmax(network.feedforward(unknown[-1])) + 1
+    # f.write(f"{prediction}")
+    # f.close()
 
 
 
