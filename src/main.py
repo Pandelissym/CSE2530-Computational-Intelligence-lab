@@ -53,17 +53,17 @@ def main():
         neuron_layouts['scores'].append(round(k_fold_acc, 2))
     plot_results(neuron_layouts)
 
+    # Write predictions of unknown data to Text File
+    f = open("../doc/Group_66_classes.txt", "w")
+    for x in unknown[:-1]:
+        print(x)
+        prediction = np.argmax(network.feedforward(x)) + 1
+        f.write(f"{prediction},")
 
-    # # Write predictions of unknown data to Text File
-    # f = open("../doc/Group_66_classes.txt", "w")
-    # for x in unknown[:-1]:
-    #     print(x)
-    #     prediction = np.argmax(network.feedforward(x)) + 1
-    #     f.write(f"{prediction},")
-    #
-    # prediction = np.argmax(network.feedforward(unknown[-1])) + 1
-    # f.write(f"{prediction}")
-    # f.close()
+    prediction = np.argmax(network.feedforward(unknown[-1])) + 1
+    f.write(f"{prediction}")
+    f.close()
+
 
 
 
