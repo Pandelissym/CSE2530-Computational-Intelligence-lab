@@ -2,17 +2,14 @@
 Module implementing a multi layer perceptron
 """
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sn
-import pandas as pd
-
 from activations import sigmoid, sigmoid_derivative, softmax
 from cost_functions import LogLikelihood
-from matplotlib.ticker import MaxNLocator
-
+# import matplotlib.pyplot as plt
+# import seaborn as sn
 
 def accuracy_score(predictions, targets):
     return np.where(predictions == targets)[0].shape[0] / len(targets)
+
 
 class Network:
     """
@@ -71,25 +68,7 @@ class Network:
         """
         n = len(data)
 
-        if validation_data is not None:
-            train_errors = []
-            validation_errors = []
-            train_accs = []
-            validation_accs = []
-
         for i in range(epochs):
-            if validation_data is not None:
-                train_error = self.cost_function.get_cost(data, self)
-                train_acc = accuracy_score(np.array([np.argmax(self.feedforward(x)) + 1 for x, y in data]), np.array([np.argmax(y) + 1 for x, y in data]))
-                train_errors.append(train_error)
-                train_accs.append(train_acc)
-
-                validation_error = self.cost_function.get_cost(validation_data,
-                                                               self)
-                validation_acc = accuracy_score(np.array([np.argmax(self.feedforward(x)) + 1 for x, y in validation_data]), np.array([np.argmax(y) + 1 for x, y in validation_data]))
-                validation_errors.append(validation_error)
-                validation_accs.append(validation_acc)
-
             np.random.shuffle(data)
             mini_batches = [data[j:j + mini_batch_size]
                             for j in range(0, n, mini_batch_size)]
@@ -98,42 +77,6 @@ class Network:
                 self.update_with_mini_batch(mini_batch, learning_rate)
 
             print(f"Epoch {i} completed.")
-
-        if validation_data is not None:
-            font = {'family': 'normal',
-                    'weight': 'normal',
-                    'size': 17}
-            plt.rc('font', **font)
-            plt.rc('lines', markersize=6)
-            plt.rc('xtick', labelsize=15)
-            plt.rc('ytick', labelsize=15)
-            plt.rc("figure", figsize=(6, 6))
-
-            x = list(range(epochs))
-            plt.plot(x, train_errors, label=f'training')
-            plt.plot(x, validation_errors, label=f'validation')
-            ax = plt.gca()
-            ax.set_ylabel("Error (MSE)", labelpad=8)
-            ax.set_xlabel("Epoch", labelpad=5)
-            ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-            ax.set_title("Error (MSE) over epochs", y=1.05)
-            plt.legend()
-            plt.show()
-
-            plt.tight_layout()
-            # plt.savefig("../doc/plots/validation_vs_training")
-
-            plt.plot(x, train_accs, label=f'training')
-            plt.plot(x, validation_accs, label=f'validation')
-            ax = plt.gca()
-            ax.set_ylabel("Accuracy", labelpad=8)
-            ax.set_xlabel("Epochs", labelpad=5)
-            ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-            ax.set_title("Accuracy over epochs", y=1.05)
-            plt.legend()
-            plt.show()
-
-            plt.tight_layout()
 
     def update_with_mini_batch(self, mini_batch, learning_rate):
         """
@@ -226,34 +169,36 @@ class Network:
 
         return correct / total
 
-    def confusion_matrix(self, validation_data):
-        """
-        Creates Confusion Matrix based on the validation data and returns
-        it.
-
-        :param validation_data: data to validate model on
-        :return: The confusion matrix of the model.
-        """
-        confusion_matrix = np.zeros((7, 7))
-        for x, y in validation_data:
-            output = self.feedforward(x)
-            confusion_matrix[np.argmax(output), np.argmax(y)] += 1
-
-        df_cm = pd.DataFrame(confusion_matrix, index=["Class " + i for i in "1234567"],
-                             columns=["Class " + i for i in "1234567"])
-
-        group_c = ["{0: 0.0f}".format(value) for value in confusion_matrix.flatten()]
-
-        normalized = confusion_matrix
-        for i in range(len(confusion_matrix.T)):
-            normalized[i] = confusion_matrix[i] / np.sum(confusion_matrix[i])
-
-
-        group_p = ["{0: .2%}".format(value) for value in normalized.flatten()]
-        labels = [f"{v1}\n{v2}" for v1, v2 in zip(group_c, group_p)]
-
-        labels = np.asarray(labels).reshape(7, 7)
-        plt.figure(figsize=(12, 8))
-        sn.heatmap(df_cm, annot=labels, cmap='Blues', fmt='').set(xlabel='Predicted Values', ylabel='Actual Values')
-
-        return confusion_matrix
+    # def confusion_matrix(self, validation_data):
+    #     """
+    #     Creates Confusion Matrix based on the validation data and returns
+    #     it.
+    #
+    #     :param validation_data: data to validate model on
+    #     :return: The confusion matrix of the model.
+    #     """
+    #     confusion_matrix = np.zeros((7, 7))
+    #     for x, y in validation_data:
+    #         output = self.feedforward(x)
+    #         confusion_matrix[np.argmax(output), np.argmax(y)] += 1
+    #
+    #     df_cm = pd.DataFrame(confusion_matrix,
+    #                          index=["Class " + i for i in "1234567"],
+    #                          columns=["Class " + i for i in "1234567"])
+    #
+    #     group_c = ["{0: 0.0f}".format(value) for value in
+    #                confusion_matrix.flatten()]
+    #
+    #     normalized = confusion_matrix
+    #     for i in range(len(confusion_matrix.T)):
+    #         normalized[i] = confusion_matrix[i] / np.sum(confusion_matrix[i])
+    #
+    #     group_p = ["{0: .2%}".format(value) for value in normalized.flatten()]
+    #     labels = [f"{v1}\n{v2}" for v1, v2 in zip(group_c, group_p)]
+    #
+    #     labels = np.asarray(labels).reshape(7, 7)
+    #     plt.figure(figsize=(12, 8))
+    #     sn.heatmap(df_cm, annot=labels, cmap='Blues', fmt='').set(
+    #         xlabel='Predicted Values', ylabel='Actual Values')
+    #
+    #     return confusion_matrix

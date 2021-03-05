@@ -2,10 +2,8 @@
 Module implementing a perceptron.
 """
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.ticker import MaxNLocator
 from activations import step
-import matplotlib.axes._axes as axes
+# import matplotlib
 
 
 class Perceptron:
@@ -65,8 +63,8 @@ class Perceptron:
         elif epoch >= self.max_epochs:
             print(f"Could not converge in {self.max_epochs} epochs.")
 
-        if plot_learning_graph:
-            self._plot_learning_graph(costs, epoch, save_file)
+        # if plot_learning_graph:
+        #     self._plot_learning_graph(costs, epoch, save_file)
 
     def get_prediction(self, point):
         """
@@ -122,97 +120,97 @@ class Perceptron:
 
         return error
 
-    def plot_decision_boundary(self, save_file=False):
-        """
-        Method to plot the decision boundary along with the points of the
-        trained perceptron.
-
-        :return: None
-        """
-        assert len(self.data[0]) - 1 == 2
-        font = {'family': 'normal',
-                'weight': 'normal',
-                'size': 18}
-        plt.rc('font', **font)
-        plt.rc('lines', markersize=6)
-        plt.rc('xtick', labelsize=15)
-        plt.rc('ytick', labelsize=15)
-        plt.rc("figure", figsize=(6, 6))
-
-        ax = plt.subplot()  # type: axes.Axes
-        colors = ['tab:blue', 'tab:orange']
-
-        x_values = self.data[:, 0]
-        y_values = self.data[:, 1]
-
-        # Limit axes to keep only area of interest
-        max_x = np.max(np.array(self.data)[:, 0]) + 1
-        min_x = np.min(np.array(self.data)[:, 0]) - 1
-        ax.set_xlim(min_x, max_x)
-
-        min_y = np.min(self.data[:, 1]) - 1
-        max_y = np.max(self.data[:, 1]) + 1
-        ax.set_ylim(min_y, max_y)
-
-        # Draw decision boundaries
-        xx, yy = np.meshgrid(np.arange(min_x, max_x, 0.01),
-                             np.arange(min_y, max_y, 0.01))
-        r1, r2 = xx.flatten(), yy.flatten()
-        r1, r2 = r1.reshape((len(r1), 1)), r2.reshape((len(r2), 1))
-        grid = np.hstack((r1, r2))
-        pred = np.array([self.get_prediction(i) for i in grid])
-        zz = pred.reshape(xx.shape)
-        ax.contourf(xx, yy, zz, alpha=0.2, levels=1, colors=colors)
-
-        # Draw line
-        x = np.linspace(min_x, max_x)
-        y = [(-self.weights[2] - self.weights[0] * i) / self.weights[1]
-             for i in x]
-        ax.plot(x, y, color='k', lw='1.2')
-
-        # Draw vector
-        index = np.argmin(np.abs(np.array(y) - max_y))
-        x1, y1 = x[index], y[index]
-        index2 = np.argmin(np.abs(np.array(y) - min_y))
-        x2, y2 = x[index2], y[index2]
-
-        ax.quiver((x1 + x2)/2, (y1 + y2)/2, self.weights[0], self.weights[1],
-                  scale_units='xy', scale=1)
-
-        # Draw points
-        ax.scatter(x_values, y_values, c=[colors[i] for i in self.labels])
-        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-
-        ax.set_title("Decision boundary for XOR", y=1.05)
-        if save_file:
-            plt.savefig("../doc/plots/XOR_decision_boundary")
-        plt.show()
-
-    def _plot_learning_graph(self, costs: [float], epochs: int, save_file=False):
-        """
-        Plot the cost versus epochs.
-
-        :param costs: List of cost at each epoch
-        :param epochs: The total amount of epochs the model run for
-        :return: None
-        """
-        font = {'family': 'normal',
-                'weight': 'normal',
-                'size': 18}
-        plt.rc('font', **font)
-        plt.rc('lines', markersize=6)
-        plt.rc('xtick', labelsize=15)
-        plt.rc('ytick', labelsize=15)
-        plt.rc("figure", figsize=(6, 6))
-
-        x = list(range(epochs))
-        ax = plt.subplot()  # type:axes.Axes
-        ax.set_ylabel("Error (MSE)", labelpad=8)
-        ax.set_xlabel("Epoch", labelpad=5)
-        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-        ax.plot(x, costs)
-        ax.set_title("Error (MSE) over epochs for XOR", y=1.05)
-        plt.tight_layout()
-        if save_file:
-            plt.savefig("../doc/plots/XOR_error_over_epochs")
-        plt.show()
+    # def plot_decision_boundary(self, save_file=False):
+    #     """
+    #     Method to plot the decision boundary along with the points of the
+    #     trained perceptron.
+    #
+    #     :return: None
+    #     """
+    #     assert len(self.data[0]) - 1 == 2
+    #     font = {'family': 'normal',
+    #             'weight': 'normal',
+    #             'size': 18}
+    #     plt.rc('font', **font)
+    #     plt.rc('lines', markersize=6)
+    #     plt.rc('xtick', labelsize=15)
+    #     plt.rc('ytick', labelsize=15)
+    #     plt.rc("figure", figsize=(6, 6))
+    #
+    #     ax = plt.subplot()  # type: axes.Axes
+    #     colors = ['tab:blue', 'tab:orange']
+    #
+    #     x_values = self.data[:, 0]
+    #     y_values = self.data[:, 1]
+    #
+    #     # Limit axes to keep only area of interest
+    #     max_x = np.max(np.array(self.data)[:, 0]) + 1
+    #     min_x = np.min(np.array(self.data)[:, 0]) - 1
+    #     ax.set_xlim(min_x, max_x)
+    #
+    #     min_y = np.min(self.data[:, 1]) - 1
+    #     max_y = np.max(self.data[:, 1]) + 1
+    #     ax.set_ylim(min_y, max_y)
+    #
+    #     # Draw decision boundaries
+    #     xx, yy = np.meshgrid(np.arange(min_x, max_x, 0.01),
+    #                          np.arange(min_y, max_y, 0.01))
+    #     r1, r2 = xx.flatten(), yy.flatten()
+    #     r1, r2 = r1.reshape((len(r1), 1)), r2.reshape((len(r2), 1))
+    #     grid = np.hstack((r1, r2))
+    #     pred = np.array([self.get_prediction(i) for i in grid])
+    #     zz = pred.reshape(xx.shape)
+    #     ax.contourf(xx, yy, zz, alpha=0.2, levels=1, colors=colors)
+    #
+    #     # Draw line
+    #     x = np.linspace(min_x, max_x)
+    #     y = [(-self.weights[2] - self.weights[0] * i) / self.weights[1]
+    #          for i in x]
+    #     ax.plot(x, y, color='k', lw='1.2')
+    #
+    #     # Draw vector
+    #     index = np.argmin(np.abs(np.array(y) - max_y))
+    #     x1, y1 = x[index], y[index]
+    #     index2 = np.argmin(np.abs(np.array(y) - min_y))
+    #     x2, y2 = x[index2], y[index2]
+    #
+    #     ax.quiver((x1 + x2)/2, (y1 + y2)/2, self.weights[0], self.weights[1],
+    #               scale_units='xy', scale=1)
+    #
+    #     # Draw points
+    #     ax.scatter(x_values, y_values, c=[colors[i] for i in self.labels])
+    #     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+    #
+    #     ax.set_title("Decision boundary for XOR", y=1.05)
+    #     if save_file:
+    #         plt.savefig("../doc/plots/XOR_decision_boundary")
+    #     plt.show()
+    #
+    # def _plot_learning_graph(self, costs: [float], epochs: int, save_file=False):
+    #     """
+    #     Plot the cost versus epochs.
+    #
+    #     :param costs: List of cost at each epoch
+    #     :param epochs: The total amount of epochs the model run for
+    #     :return: None
+    #     """
+    #     font = {'family': 'normal',
+    #             'weight': 'normal',
+    #             'size': 18}
+    #     plt.rc('font', **font)
+    #     plt.rc('lines', markersize=6)
+    #     plt.rc('xtick', labelsize=15)
+    #     plt.rc('ytick', labelsize=15)
+    #     plt.rc("figure", figsize=(6, 6))
+    #
+    #     x = list(range(epochs))
+    #     ax = plt.subplot()  # type:axes.Axes
+    #     ax.set_ylabel("Error (MSE)", labelpad=8)
+    #     ax.set_xlabel("Epoch", labelpad=5)
+    #     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+    #     ax.plot(x, costs)
+    #     ax.set_title("Error (MSE) over epochs for XOR", y=1.05)
+    #     plt.tight_layout()
+    #     if save_file:
+    #         plt.savefig("../doc/plots/XOR_error_over_epochs")
+    #     plt.show()

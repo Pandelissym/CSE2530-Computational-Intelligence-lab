@@ -10,14 +10,14 @@ def load_data():
 
     :return: (features, targets, unknown)
     """
-    with open("../data/features.txt") as file:
+    with open("./data/features.txt") as file:
         features = [np.array(list(map(float, line.strip('/n').split(',')))).reshape((10, 1))
                     for line in file]
 
-    with open("../data/targets.txt") as file:
+    with open("./data/targets.txt") as file:
         targets = [vectorize_target(int(line.rstrip('\n')), 7) for line in file]
 
-    with open("../data/unknown.txt") as file:
+    with open("./data/unknown.txt") as file:
         unknown = [np.array(list(map(float, line.strip('/n').split(',')))).reshape((10,1))
                    for line in file]
     return np.array(features), np.array(targets), np.array(unknown)

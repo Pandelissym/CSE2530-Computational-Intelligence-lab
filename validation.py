@@ -1,6 +1,6 @@
 from network import Network
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 
 def accuracy_score(predictions, targets):
@@ -32,35 +32,35 @@ def cross_validate(network: Network, X, y, k, validation_data, epochs=30):
     return np.mean(scores)
 
 
-def plot_results(neuron_layouts):
-    x = np.arange(len(neuron_layouts['amounts']))  # the label locations
-    width = 0.7
-
-    fig, ax = plt.subplots(nrows=1, sharex=True, sharey=True, figsize=[7,5])
-
-    rects = ax.bar(x, neuron_layouts['scores'], width)
-
-    # Add some text for labels, title and custom x-axis tick labels, etc.
-    ax.set_ylabel('K-Fold Cross Validation Scores')
-    ax.set_title('Number of Neurons')
-    ax.set_xticks(x)
-    ax.set_xticklabels(neuron_layouts['amounts'])
-    ax.legend()
-
-    def autolabel(rects, ax):
-        """Attach a text label above each bar in *rects*, displaying its height."""
-        for rect in rects:
-            height = rect.get_height()
-            ax.annotate('{}'.format(height),
-                        xy=(rect.get_x() + rect.get_width() / 2, height),
-                        xytext=(0, 3),  # 3 points vertical offset
-                        textcoords="offset points",
-                        ha='center', va='bottom')
-
-    autolabel(rects, ax)
-
-    fig.tight_layout()
-    plt.setp(ax.xaxis.get_majorticklabels(), rotation=70)
-    plt.ylim((0.5, 1.1))
-
-    plt.show()
+# def plot_results(neuron_layouts):
+#     x = np.arange(len(neuron_layouts['amounts']))  # the label locations
+#     width = 0.7
+#
+#     fig, ax = plt.subplots(nrows=1, sharex=True, sharey=True, figsize=[7,5])
+#
+#     rects = ax.bar(x, neuron_layouts['scores'], width)
+#
+#     # Add some text for labels, title and custom x-axis tick labels, etc.
+#     ax.set_ylabel('K-Fold Cross Validation Scores')
+#     ax.set_title('Number of Neurons')
+#     ax.set_xticks(x)
+#     ax.set_xticklabels(neuron_layouts['amounts'])
+#     ax.legend()
+#
+#     def autolabel(rects, ax):
+#         """Attach a text label above each bar in *rects*, displaying its height."""
+#         for rect in rects:
+#             height = rect.get_height()
+#             ax.annotate('{}'.format(height),
+#                         xy=(rect.get_x() + rect.get_width() / 2, height),
+#                         xytext=(0, 3),  # 3 points vertical offset
+#                         textcoords="offset points",
+#                         ha='center', va='bottom')
+#
+#     autolabel(rects, ax)
+#
+#     fig.tight_layout()
+#     plt.setp(ax.xaxis.get_majorticklabels(), rotation=70)
+#     plt.ylim((0.5, 1.1))
+#
+#     plt.show()

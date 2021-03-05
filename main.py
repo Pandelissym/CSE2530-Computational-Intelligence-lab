@@ -2,14 +2,13 @@
 Main module.
 """
 from data_loader import *
-from matplotlib.ticker import MaxNLocator
 from network import Network
+# import matplotlib
 from validation import *
 import numpy as np
 from perceptron import Perceptron
-import matplotlib.pyplot as plt
 
-# INFO: data folder must be in the parent directory of the data_loader.py file.
+# INFO: data folder must be in the same directory containing input data
 
 def main():
     """
@@ -21,6 +20,7 @@ def main():
     # perceptron.train(plot_learning_graph=True, save_file=False)
     # perceptron.plot_decision_boundary(save_file=False)
 
+    # Load data
     features, targets, unknown = load_data()
     data = list(zip(features, targets))
     training_data, test_data = split_train_test(data, 0.15)
@@ -28,20 +28,12 @@ def main():
 
     # Create the network with one hidden layer
     network = Network([10, 30, 7])
-    # set to the data to which we are learning to 'data' because we are testing it on the unknown dataset
+    # set to the data to which we are learning to 'data' because we are testing
+    # it on the unknown dataset and start training
     network.train(data, 35, 20, 0.07, validation_data)
 
-    # # Plots
-    # # Plot the confusion matrix of the network
-    # accuracy = network.evaluate(test_data)
-    # confusion_matrix = network.confusion_matrix(test_data)
-    # print(f"accuracy= {accuracy}")
-    # plt.suptitle("Sigmoid with softmax and log likelihood. Accuracy = "
-    #              + str(accuracy))
-    # plt.suptitle("Confusion Matrix")
-    # # print(f"Confusion Matrix= {confusion_matrix}")
-    # plt.legend()
-    # plt.show()
+    accuracy = network.evaluate(test_data)
+    print(f"accuracy= {accuracy}")
 
     # # Plot the performance of different middle layers in cross validation
     # neuron_layouts = {
@@ -66,8 +58,6 @@ def main():
     # prediction = np.argmax(network.feedforward(unknown[-1])) + 1
     # f.write(f"{prediction}")
     # f.close()
-
-
 
 
 if __name__ == "__main__":
