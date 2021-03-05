@@ -1,4 +1,4 @@
-from src.network import Network
+from network import Network
 import numpy as np
 import matplotlib.pyplot as plt
 

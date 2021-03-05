@@ -1,5 +1,5 @@
 import numpy as np
-from src.activations import sigmoid_derivative
+from activations import sigmoid_derivative
 
 
 class LogLikelihood:

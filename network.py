@@ -5,11 +5,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sn
 import pandas as pd
-from matplotlib.ticker import MaxNLocator
 
-from src.activations import sigmoid, sigmoid_derivative, softmax, \
-    tanh_derivative, tanh, leaky_relu_derivative, leaky_relu
-from src.cost_functions import LogLikelihood
+from activations import sigmoid, sigmoid_derivative, softmax
+from cost_functions import LogLikelihood
 from matplotlib.ticker import MaxNLocator
 
 
@@ -76,16 +74,21 @@ class Network:
         if validation_data is not None:
             train_errors = []
             validation_errors = []
+            train_accs = []
+            validation_accs = []
 
         for i in range(epochs):
             if validation_data is not None:
                 train_error = self.cost_function.get_cost(data, self)
-                train_error = accuracy_score(np.array([np.argmax(self.feedforward(x)) + 1 for x, y in data]), np.array([np.argmax(y) + 1 for x, y in data]))
+                train_acc = accuracy_score(np.array([np.argmax(self.feedforward(x)) + 1 for x, y in data]), np.array([np.argmax(y) + 1 for x, y in data]))
                 train_errors.append(train_error)
+                train_accs.append(train_acc)
+
                 validation_error = self.cost_function.get_cost(validation_data,
                                                                self)
-                validation_error = accuracy_score(np.array([np.argmax(self.feedforward(x)) + 1 for x, y in validation_data]), np.array([np.argmax(y) + 1 for x, y in validation_data]))
+                validation_acc = accuracy_score(np.array([np.argmax(self.feedforward(x)) + 1 for x, y in validation_data]), np.array([np.argmax(y) + 1 for x, y in validation_data]))
                 validation_errors.append(validation_error)
+                validation_accs.append(validation_acc)
 
             np.random.shuffle(data)
             mini_batches = [data[j:j + mini_batch_size]
@@ -118,8 +121,10 @@ class Network:
             plt.show()
 
             plt.tight_layout()
-            plt.savefig("../doc/plots/validation_vs_training")
+            # plt.savefig("../doc/plots/validation_vs_training")
 
+            plt.plot(x, train_accs, label=f'training')
+            plt.plot(x, validation_accs, label=f'validation')
             ax = plt.gca()
             ax.set_ylabel("Accuracy", labelpad=8)
             ax.set_xlabel("Epochs", labelpad=5)
