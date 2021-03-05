@@ -30,7 +30,7 @@ def main():
     network = Network([10, 30, 7])
     # set to the data to which we are learning to 'data' because we are testing
     # it on the unknown dataset and start training
-    network.train(data, 35, 20, 0.07, validation_data)
+    network.train(training_data, 35, 20, 0.07, validation_data)
 
     accuracy = network.evaluate(test_data)
     print(f"accuracy= {accuracy}")
