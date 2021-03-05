@@ -5,3 +5,5 @@ __pycache__/
 
 # MACOS
 .DS_STORE
+
+\venv

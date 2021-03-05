@@ -8,7 +8,11 @@ import pandas as pd
 from src.activations import sigmoid, sigmoid_derivative, softmax, \
     tanh_derivative, tanh, leaky_relu_derivative, leaky_relu
 from src.cost_functions import LogLikelihood
+from matplotlib.ticker import MaxNLocator
 
+
+def accuracy_score(predictions, targets):
+    return np.where(predictions == targets)[0].shape[0] / len(targets)
 
 class Network:
     """
@@ -26,6 +30,7 @@ class Network:
 
         :param sizes: A list containing the amount of neurons in each layer.
         """
+        self.layers = sizes
         self.num_layers = len(sizes)
         self.biases = np.array([np.random.randn(x, 1) for x in sizes[1:]],
                                dtype=object)
@@ -72,9 +77,11 @@ class Network:
         for i in range(epochs):
             if validation_data is not None:
                 train_error = self.cost_function.get_cost(data, self)
+                train_error = accuracy_score(np.array([np.argmax(self.feedforward(x)) + 1 for x, y in data]), np.array([np.argmax(y) + 1 for x, y in data]))
                 train_errors.append(train_error)
                 validation_error = self.cost_function.get_cost(validation_data,
                                                                self)
+                validation_error = accuracy_score(np.array([np.argmax(self.feedforward(x)) + 1 for x, y in validation_data]), np.array([np.argmax(y) + 1 for x, y in validation_data]))
                 validation_errors.append(validation_error)
 
             np.random.shuffle(data)
@@ -87,9 +94,28 @@ class Network:
             print(f"Epoch {i} completed.")
 
         if validation_data is not None:
+            font = {'family': 'normal',
+                    'weight': 'normal',
+                    'size': 17}
+            plt.rc('font', **font)
+            plt.rc('lines', markersize=6)
+            plt.rc('xtick', labelsize=15)
+            plt.rc('ytick', labelsize=15)
+            plt.rc("figure", figsize=(6, 6))
+
             x = list(range(epochs))
             plt.plot(x, train_errors, label=f'training')
             plt.plot(x, validation_errors, label=f'validation')
+
+            ax = plt.gca()
+            ax.set_ylabel("Accuracy", labelpad=8)
+            ax.set_xlabel("Epochs", labelpad=5)
+            ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+            ax.set_title("Accuracy over epochs", y=1.05)
+            plt.legend()
+            plt.show()
+
+            plt.tight_layout()
 
     def update_with_mini_batch(self, mini_batch, learning_rate):
         """
